@@ -1,0 +1,9 @@
+.artist-item {
+    transition: all .2s ease-in-out;
+}
+
+.artist-item:hover {
+    background: #2196f340 !important;
+    transform: scale(1.1);
+    cursor: pointer;
+}
