@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StatelessComponent } from "react";
+import { StatelessComponent, Suspense } from "react";
 import {
   Avatar,
   CircularProgress,
@@ -13,6 +13,7 @@ import { ArtistMediaButtons } from "../Shared/ArtistMediaButtons";
 import { Artist } from "../../types/artist";
 import { compose, lifecycle, withState } from "recompose";
 import { getArtist } from "../../utils/getArtist";
+import { Img } from "the-platform";
 
 const styles = (theme: any) => ({
   paper: {
@@ -32,11 +33,24 @@ const ArtistInfo: StatelessComponent<
     <Paper className={classes!.paper}>
       <Grid container direction={"row"}>
         <Grid item xs={3}>
-          <Avatar
-            alt={artist.name}
-            src={artist.image_url}
-            style={{ width: 256, height: 256 }}
-          />
+          {/*todo: bez maxDuration Suspense jest bezsensu, bo React i tak czeka na .big-image*/}
+          {/*<Suspense
+            fallback={
+              <Img
+                className="MuiAvatar-img-140"
+                alt={artist.name}
+                src={artist.thumb_url}
+                style={{ width: 256, height: 256, filter: "blur(5px)" }}
+              />
+            }
+          >*/}
+            <Img
+              className="big-image MuiAvatar-img-140"
+              alt={artist.name}
+              src={artist.image_url}
+              style={{ width: 256, height: 256 }}
+            />
+          {/*</Suspense>*/}
         </Grid>
         <Grid item xs={9}>
           <Typography variant="h2" gutterBottom>
