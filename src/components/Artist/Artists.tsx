@@ -3,7 +3,6 @@ import Typography from "@material-ui/core/Typography/Typography";
 import ArtistItem from "./ArtistItem";
 import * as React from "react";
 import {
-  CircularProgress,
   StyledComponentProps,
   withStyles
 } from "@material-ui/core";
@@ -13,6 +12,7 @@ import { first, tap } from "rxjs/operators";
 import { compose, lifecycle, withState } from "recompose";
 import { Artist } from "../../types/artist";
 import { getArtist } from "../../utils/getArtist";
+import {Spinner} from "../Shared/Spinner";
 
 const styles = (theme: any) => ({
   root: {
@@ -28,7 +28,7 @@ const Artists: StatelessComponent<
   StyledComponentProps & RouteComponentProps & ArtistsState & LoaderState
 > = ({ classes, history, artists, isLoading }) =>
   isLoading ? (
-    <CircularProgress />
+    <Spinner msg="Loading artists..." />
   ) : (
     <React.Fragment>
       <Typography component="h3" variant="h3" gutterBottom>
