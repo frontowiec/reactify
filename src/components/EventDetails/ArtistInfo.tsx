@@ -62,12 +62,10 @@ const enhance = compose<ArtistState & LoaderState & Props, Props>(
   lifecycle<ArtistState & LoaderState & Props, {}>({
     componentDidMount() {
       this.props.setLoading(true);
-      getArtist(this.props.artistName)
-        .toPromise()
-        .then(artist => {
-          this.props.setArtist(artist);
-          this.props.setLoading(false);
-        });
+      getArtist(this.props.artistName).then(artist => {
+        this.props.setArtist(artist);
+        this.props.setLoading(false);
+      });
     }
   })
 );

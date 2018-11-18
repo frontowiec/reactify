@@ -10,6 +10,7 @@ import {
 } from "@material-ui/core";
 import { compose, lifecycle, withState } from "recompose";
 import { ajax } from "rxjs/ajax";
+import { getJSON } from "../../ajax/getJSON";
 
 const styles = (theme: any) => ({
   paper: {
@@ -53,13 +54,11 @@ const enhance = compose<
   lifecycle<EventsState & LoaderState & Props, {}>({
     componentDidMount() {
       this.props.setLoading(true);
-      ajax
-        .get(
-          `https://rest.bandsintown.com/artists/${
-            this.props.artistName
-          }/events?app_id=123`
-        )
-        .toPromise()
+      getJSON(
+        `https://rest.bandsintown.com/artists/${
+          this.props.artistName
+        }/events?app_id=123`
+      )
         .then(({ response }) => response)
         .then(events => {
           this.props.setEvents(events);

@@ -1,7 +1,6 @@
-import { ajax } from "rxjs/ajax";
-import { map } from "rxjs/operators";
+import { getJSON } from "../ajax/getJSON";
 
 export const getArtist = (artist: string) =>
-  ajax
-    .get(`https://rest.bandsintown.com/artists/${artist}?app_id=123`)
-    .pipe(map(({ response }) => response));
+  getJSON(`https://rest.bandsintown.com/artists/${artist}?app_id=123`).then(
+    ({ response }) => response
+  );
