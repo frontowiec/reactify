@@ -1,7 +1,6 @@
 import * as React from "react";
 import { StatelessComponent } from "react";
 import {
-  CircularProgress,
   Grid,
   Paper,
   StyledComponentProps,
@@ -9,8 +8,8 @@ import {
   withStyles
 } from "@material-ui/core";
 import { compose, lifecycle, withState } from "recompose";
-import { ajax } from "rxjs/ajax";
 import { getJSON } from "../../ajax/getJSON";
+import {Spinner} from "../Shared/Spinner";
 
 const styles = (theme: any) => ({
   paper: {
@@ -24,7 +23,7 @@ const EventsList: StatelessComponent<
   StyledComponentProps & EventsState & LoaderState & Props
 > = ({ classes, events, isLoading }) =>
   isLoading ? (
-    <CircularProgress />
+    <Spinner msg="Fetching events..." />
   ) : (
     <React.Fragment>
       <Typography variant="h3" gutterBottom>

@@ -1,12 +1,9 @@
 import React, { Component, lazy, Suspense } from "react";
 import "./App.css";
-import {
-  CircularProgress,
-  createMuiTheme,
-  MuiThemeProvider
-} from "@material-ui/core";
+import { createMuiTheme, MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { Container } from "./components/Container";
+import { Spinner } from "./components/Shared/Spinner";
 
 const Artists = lazy(() => import("./components/Artist/Artists"));
 const EventDetails = lazy(() =>
@@ -28,7 +25,7 @@ class App extends Component {
       <Router>
         <MuiThemeProvider theme={theme}>
           <Container>
-            <Suspense fallback={<CircularProgress/>}>
+            <Suspense fallback={<Spinner />}>
               <Route path="/" exact component={Artists} />
               <Route path="/artists/" exact component={Artists} />
               <Route

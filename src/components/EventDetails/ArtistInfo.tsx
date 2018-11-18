@@ -1,8 +1,6 @@
 import * as React from "react";
-import { StatelessComponent, Suspense } from "react";
+import { StatelessComponent } from "react";
 import {
-  Avatar,
-  CircularProgress,
   Grid,
   Paper,
   StyledComponentProps,
@@ -14,6 +12,7 @@ import { Artist } from "../../types/artist";
 import { compose, lifecycle, withState } from "recompose";
 import { getArtist } from "../../utils/getArtist";
 import { Img } from "the-platform";
+import {Spinner} from "../Shared/Spinner";
 
 const styles = (theme: any) => ({
   paper: {
@@ -28,7 +27,7 @@ const ArtistInfo: StatelessComponent<
   StyledComponentProps & ArtistState & LoaderState & Props
 > = ({ classes, artist, isLoading }) =>
   isLoading ? (
-    <CircularProgress />
+    <Spinner msg="Fetching artist info..." />
   ) : (
     <Paper className={classes!.paper}>
       <Grid container direction={"row"}>
