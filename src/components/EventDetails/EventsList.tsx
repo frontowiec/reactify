@@ -7,9 +7,14 @@ import {
   Typography,
   withStyles
 } from "@material-ui/core";
-import { compose, lifecycle, withState } from "recompose";
 import { getJSON } from "../../ajax/getJSON";
-import {Spinner} from "../Shared/Spinner";
+import { unstable_createResource } from "react-cache";
+
+const EventsResource = unstable_createResource((artistName: string) =>
+  getJSON(
+    `https://rest.bandsintown.com/artists/${artistName}/events?app_id=123`
+  ).then(({ response }) => response)
+);
 
 const styles = (theme: any) => ({
   paper: {
@@ -19,12 +24,13 @@ const styles = (theme: any) => ({
   }
 });
 
-const EventsList: StatelessComponent<
-  StyledComponentProps & EventsState & LoaderState & Props
-> = ({ classes, events, isLoading }) =>
-  isLoading ? (
-    <Spinner msg="Fetching events..." />
-  ) : (
+const EventsList: StatelessComponent<StyledComponentProps & Props> = ({
+  classes,
+  artistName
+}) => {
+  const events: EventDetail[] = EventsResource.read(artistName);
+
+  return (
     <React.Fragment>
       <Typography variant="h3" gutterBottom>
         Upcoming Events
@@ -42,43 +48,10 @@ const EventsList: StatelessComponent<
       ))}
     </React.Fragment>
   );
-
-const enhance = compose<
-  EventsState & StyledComponentProps & LoaderState & Props,
-  Props
->(
-  withStyles(styles),
-  withState("events", "setEvents", []),
-  withState("isLoading", "setLoading", true),
-  lifecycle<EventsState & LoaderState & Props, {}>({
-    componentDidMount() {
-      this.props.setLoading(true);
-      getJSON(
-        `https://rest.bandsintown.com/artists/${
-          this.props.artistName
-        }/events?app_id=123`
-      )
-        .then(({ response }) => response)
-        .then(events => {
-          this.props.setEvents(events);
-          this.props.setLoading(false);
-        });
-    }
-  })
-);
+};
 
 interface Props {
   artistName: string;
-}
-
-interface EventsState {
-  events: EventDetail[];
-  setEvents: (events: EventDetail[]) => void;
-}
-
-interface LoaderState {
-  isLoading: boolean;
-  setLoading: (isLoading: boolean) => void;
 }
 
 interface Venue {
@@ -108,4 +81,4 @@ interface EventDetail {
   offers: Offer[];
 }
 
-export default enhance(EventsList);
+export default withStyles(styles)(EventsList);

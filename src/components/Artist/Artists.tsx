@@ -5,11 +5,11 @@ import * as React from "react";
 import { StyledComponentProps, withStyles } from "@material-ui/core";
 import { RouteComponentProps } from "react-router";
 import { forkJoin } from "rxjs";
-import { first, tap } from "rxjs/operators";
-import { compose, lifecycle, withState } from "recompose";
 import { Artist } from "../../types/artist";
 import { getArtist } from "../../utils/getArtist";
-import { Spinner } from "../Shared/Spinner";
+import { unstable_createResource } from "react-cache";
+
+const ArtistsResource = unstable_createResource(() => getArtists());
 
 const styles = (theme: any) => ({
   root: {
@@ -22,11 +22,11 @@ const styles = (theme: any) => ({
 });
 
 const Artists: StatelessComponent<
-  StyledComponentProps & RouteComponentProps & ArtistsState & LoaderState
-> = ({ classes, history, artists, isLoading }) =>
-  isLoading ? (
-    <Spinner msg="Fetching artists..." />
-  ) : (
+  StyledComponentProps & RouteComponentProps
+> = ({ classes, history }) => {
+  const artists: Artist[] = ArtistsResource.read();
+
+  return (
     <React.Fragment>
       <Typography component="h3" variant="h3" gutterBottom>
         Favorite artists
@@ -46,8 +46,9 @@ const Artists: StatelessComponent<
       </div>
     </React.Fragment>
   );
+};
 
-function getArtists(callback: (artists: Artist[]) => void) {
+function getArtists(): Promise<Artist[]> {
   const favoriteArtists = [
     "metalica",
     "buckethead",
@@ -58,40 +59,7 @@ function getArtists(callback: (artists: Artist[]) => void) {
 
   const favoriteArtistsRequest = favoriteArtists.map(getArtist);
 
-  forkJoin(favoriteArtistsRequest)
-    .pipe(
-      first(),
-      tap((artists: Artist[]) => callback(artists))
-    )
-    .subscribe();
+  return forkJoin(favoriteArtistsRequest).toPromise();
 }
 
-const enhance = compose<
-  StyledComponentProps & RouteComponentProps & ArtistsState & LoaderState,
-  {}
->(
-  withStyles(styles),
-  withState("artists", "setArtists", []),
-  withState("isLoading", "setLoading", false),
-  lifecycle<ArtistsState & LoaderState, {}>({
-    componentDidMount() {
-      this.props.setLoading(true);
-      getArtists(artists => {
-        this.props.setArtists(artists);
-        this.props.setLoading(false);
-      });
-    }
-  })
-);
-
-interface ArtistsState {
-  artists: Artist[];
-  setArtists: (artists: Artist[]) => void;
-}
-
-interface LoaderState {
-  isLoading: boolean;
-  setLoading: (isLoading: boolean) => void;
-}
-
-export default enhance(Artists);
+export default withStyles(styles)(Artists);

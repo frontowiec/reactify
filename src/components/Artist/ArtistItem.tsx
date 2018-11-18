@@ -1,23 +1,36 @@
 import { StatelessComponent } from "react";
 import Paper from "@material-ui/core/Paper/Paper";
 import Grid from "@material-ui/core/Grid/Grid";
-import Avatar from "@material-ui/core/Avatar/Avatar";
 import Typography from "@material-ui/core/Typography/Typography";
 import * as React from "react";
 import {
-  IconButton,
   StyledComponentProps,
   Tooltip,
   withStyles
 } from "@material-ui/core";
 import "./artistItem.css";
 import { Artist } from "../../types/artist";
-import {ArtistMediaButtons} from "../Shared/ArtistMediaButtons";
+import { ArtistMediaButtons } from "../Shared/ArtistMediaButtons";
+import { Img } from "the-platform";
 
-const styles = (theme: any) => ({
+const styles: any = (theme: any) => ({
   paper: {
     margin: theme.spacing.unit,
     padding: theme.spacing.unit * 2
+  },
+  avatar: {
+    width: "40px",
+    height: "40px",
+    display: "flex",
+    position: "relative",
+    overflow: "hidden",
+    fontSize: "1.25rem",
+    flexShrink: 0,
+    fontFamily: ' "Roboto", "Helvetica", "Arial", sans-serif',
+    alignItems: "center",
+    userSelect: "none",
+    borderRadius: "50%",
+    justifyContent: "center"
   }
 });
 
@@ -29,7 +42,7 @@ const ArtistItem: StatelessComponent<StyledComponentProps & Props> = props => (
     >
       <Grid container wrap="nowrap" spacing={16}>
         <Grid item>
-          <Avatar src={props.artist.thumb_url} />
+          <Img src={props.artist.thumb_url} className={props.classes!.avatar} />
         </Grid>
         <Grid item xs>
           <Grid
@@ -42,7 +55,7 @@ const ArtistItem: StatelessComponent<StyledComponentProps & Props> = props => (
             <Typography variant="h6" gutterBottom>
               {props.artist.name}
             </Typography>
-            <ArtistMediaButtons artist={props.artist}/>
+            <ArtistMediaButtons artist={props.artist} />
           </Grid>
           <Typography variant="subtitle1" gutterBottom>
             upcoming event: {props.artist.upcoming_event_count}
