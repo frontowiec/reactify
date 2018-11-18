@@ -1,17 +1,14 @@
-import { StatelessComponent } from "react";
+import { StatelessComponent, Suspense } from "react";
 import Paper from "@material-ui/core/Paper/Paper";
 import Grid from "@material-ui/core/Grid/Grid";
 import Typography from "@material-ui/core/Typography/Typography";
 import * as React from "react";
-import {
-  StyledComponentProps,
-  Tooltip,
-  withStyles
-} from "@material-ui/core";
+import { StyledComponentProps, Tooltip, withStyles } from "@material-ui/core";
 import "./artistItem.css";
 import { Artist } from "../../types/artist";
 import { ArtistMediaButtons } from "../Shared/ArtistMediaButtons";
 import { Img } from "the-platform";
+import { Spinner } from "../Shared/Spinner";
 
 const styles: any = (theme: any) => ({
   paper: {
@@ -42,7 +39,12 @@ const ArtistItem: StatelessComponent<StyledComponentProps & Props> = props => (
     >
       <Grid container wrap="nowrap" spacing={16}>
         <Grid item>
-          <Img src={props.artist.thumb_url} className={props.classes!.avatar} />
+          <Suspense fallback={<Spinner msg="" />} maxDuration={300}>
+            <Img
+              src={props.artist.thumb_url}
+              className={props.classes!.avatar}
+            />
+          </Suspense>
         </Grid>
         <Grid item xs>
           <Grid

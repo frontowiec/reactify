@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StatelessComponent } from "react";
+import { StatelessComponent, Suspense } from "react";
 import {
   Grid,
   Paper,
@@ -31,12 +31,12 @@ const ArtistInfo: StatelessComponent<StyledComponentProps & Props> = ({
 }) => {
   const artist = ArtistResource.read(artistName);
 
+
   return (
     <Paper className={classes!.paper}>
       <Grid container direction={"row"}>
         <Grid item xs={3}>
-          {/*todo: bez maxDuration Suspense jest bezsensu, bo React i tak czeka na .big-image*/}
-          {/*<Suspense
+          <Suspense
             fallback={
               <Img
                 className="MuiAvatar-img-140"
@@ -45,14 +45,15 @@ const ArtistInfo: StatelessComponent<StyledComponentProps & Props> = ({
                 style={{ width: 256, height: 256, filter: "blur(5px)" }}
               />
             }
-          >*/}
+            maxDuration={300}
+          >
           <Img
             className="big-image MuiAvatar-img-140"
             alt={artist.name}
             src={artist.image_url}
             style={{ width: 256, height: 256 }}
           />
-          {/*</Suspense>*/}
+          </Suspense>
         </Grid>
         <Grid item xs={9}>
           <Typography variant="h2" gutterBottom>

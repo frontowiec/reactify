@@ -1,5 +1,5 @@
 import * as React from "react";
-import { StatelessComponent } from "react";
+import { StatelessComponent, Fragment } from "react";
 import {
   Grid,
   Paper,
@@ -10,10 +10,19 @@ import {
 import { getJSON } from "../../ajax/getJSON";
 import { unstable_createResource } from "react-cache";
 
-const EventsResource = unstable_createResource((artistName: string) =>
-  getJSON(
-    `https://rest.bandsintown.com/artists/${artistName}/events?app_id=123`
-  ).then(({ response }) => response)
+const EventsResource = unstable_createResource(
+  (artistName: string) =>
+    new Promise(resolve =>
+      setTimeout(
+        () =>
+          resolve(
+            getJSON(
+              `https://rest.bandsintown.com/artists/${artistName}/events?app_id=123`
+            ).then(({ response }) => response)
+          ),
+        1500
+      )
+    )
 );
 
 const styles = (theme: any) => ({
@@ -31,7 +40,7 @@ const EventsList: StatelessComponent<StyledComponentProps & Props> = ({
   const events: EventDetail[] = EventsResource.read(artistName);
 
   return (
-    <React.Fragment>
+    <Fragment>
       <Typography variant="h3" gutterBottom>
         Upcoming Events
       </Typography>
@@ -46,7 +55,7 @@ const EventsList: StatelessComponent<StyledComponentProps & Props> = ({
           </Grid>
         </Paper>
       ))}
-    </React.Fragment>
+    </Fragment>
   );
 };
 
